@@ -1,0 +1,1644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>The Situation Room</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e0d0b;
+    --bg-elev: #161411;
+    --bg-elev-2: #1e1b17;
+    --line: #2a2622;
+    --line-soft: #221f1b;
+    --text: #e8e2d4;
+    --text-dim: #8a8275;
+    --text-mute: #5a5347;
+    --amber: #d98e2b;
+    --amber-soft: #c98b3a;
+    --ember: #e36b3a;
+    --red: #c94a3a;
+    --green: #7a9460;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-weight: 300;
+    font-size: 15px;
+    line-height: 1.55;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body {
+    background:
+      radial-gradient(ellipse at top, rgba(217, 142, 43, 0.04) 0%, transparent 50%),
+      radial-gradient(ellipse at bottom right, rgba(227, 107, 58, 0.03) 0%, transparent 60%),
+      var(--bg);
+  }
+
+  .serif { font-family: 'Instrument Serif', serif; font-weight: 400; }
+  .mono  { font-family: 'IBM Plex Mono', monospace; font-weight: 400; }
+
+  .scene { display: none; min-height: 100vh; }
+  .scene.active { display: block; animation: fadeIn 0.8s ease; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  /* ---------- SCENE 0: BRIEFING ---------- */
+  #scene-brief {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    min-height: 100vh;
+  }
+  #scene-brief.active { display: flex; animation: fadeIn 0.8s ease; }
+
+  .brief-wrap {
+    max-width: 680px;
+    width: 100%;
+  }
+
+  .brief-program {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    color: var(--text-mute);
+    text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+
+  .program-mark {
+    color: var(--amber);
+    font-size: 10px;
+    margin-right: 6px;
+    letter-spacing: 0;
+    display: inline-block;
+    transform: translateY(-1px);
+  }
+
+  .brief-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(44px, 6vw, 68px);
+    line-height: 1;
+    margin-bottom: 40px;
+    color: var(--text);
+  }
+
+  .brief-title em { color: var(--amber); font-style: italic; }
+
+  .brief-scenario-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    color: var(--amber);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+
+  .brief-scenario-title {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: 26px;
+    color: var(--text-dim);
+    margin-bottom: 40px;
+  }
+
+  .brief-how {
+    border-top: 1px solid var(--line);
+    padding-top: 32px;
+    margin-bottom: 40px;
+  }
+
+  .brief-how-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    color: var(--text-mute);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  .brief-row {
+    display: grid;
+    grid-template-columns: 28px 1fr;
+    gap: 18px;
+    padding: 14px 0;
+    align-items: start;
+  }
+
+  .brief-row-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--amber);
+    padding-top: 2px;
+  }
+
+  .brief-row-text {
+    font-size: 15px;
+    color: var(--text);
+    line-height: 1.55;
+  }
+
+  .brief-row-text span {
+    color: var(--text-dim);
+    display: block;
+    font-size: 13px;
+    margin-top: 4px;
+  }
+
+  .brief-note {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: 16px;
+    color: var(--text-dim);
+    margin: 32px 0 40px 0;
+    padding: 18px 0;
+    border-top: 1px solid var(--line-soft);
+    border-bottom: 1px solid var(--line-soft);
+  }
+
+  /* ---------- SCENE 1: COLD OPEN ---------- */
+  #scene-open {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    min-height: 100vh;
+  }
+  #scene-open.active { display: flex; animation: fadeIn 0.8s ease; }
+
+  .cold-open-wrap {
+    max-width: 720px;
+    width: 100%;
+  }
+
+  .cold-open-marker {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    color: var(--amber);
+    text-transform: uppercase;
+    margin-bottom: 40px;
+    opacity: 0;
+    animation: fadeUp 1s ease 0.3s forwards;
+  }
+
+  .cold-open-marker::before {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background: var(--amber);
+    border-radius: 50%;
+    margin-right: 12px;
+    vertical-align: middle;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.85); }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .cold-open-text {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(28px, 3.8vw, 46px);
+    line-height: 1.25;
+    color: var(--text);
+    min-height: 200px;
+  }
+
+  .cold-open-text .line {
+    display: block;
+    opacity: 0;
+  }
+
+  .cold-open-text .amber-accent { color: var(--amber); font-style: italic; }
+
+  .cold-open-cta {
+    margin-top: 56px;
+    opacity: 0;
+  }
+
+  .cta-button {
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--text);
+    padding: 14px 28px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+  }
+
+  .cta-button:hover {
+    border-color: var(--amber);
+    color: var(--amber);
+    padding-left: 40px;
+  }
+
+  .cta-button::before {
+    content: '→';
+    position: absolute;
+    left: 14px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .cta-button:hover::before { opacity: 1; }
+
+  .cta-button.primary {
+    border-color: var(--amber);
+    color: var(--amber);
+  }
+
+  /* ---------- SCENE 2: SITUATION ROOM ---------- */
+  #scene-room { padding: 0; }
+
+  .room-header {
+    border-bottom: 1px solid var(--line);
+    padding: 18px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--bg);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+
+  .room-project {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .project-name {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+
+  .project-name strong {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  .room-clock {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .clock-dot {
+    width: 6px;
+    height: 6px;
+    background: var(--amber);
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  .clock-display {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    color: var(--text);
+    letter-spacing: 0.05em;
+  }
+
+  .clock-display .week-label {
+    color: var(--text-dim);
+    margin-right: 10px;
+  }
+
+  .room-grid {
+    display: grid;
+    grid-template-columns: 1fr 360px;
+    min-height: calc(100vh - 61px);
+  }
+
+  @media (max-width: 960px) {
+    .room-grid { grid-template-columns: 1fr; }
+  }
+
+  .feed {
+    padding: 32px;
+    border-right: 1px solid var(--line);
+  }
+
+  .feed-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 24px;
+  }
+
+  .feed-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: 22px;
+    color: var(--text);
+  }
+
+  .feed-count {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+  }
+
+  .message {
+    padding: 18px 20px;
+    border: 1px solid var(--line-soft);
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: var(--bg-elev);
+    position: relative;
+    opacity: 0;
+    transform: translateY(8px);
+    animation: msgIn 0.5s ease forwards;
+  }
+
+  @keyframes msgIn {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .message.unread::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--amber);
+  }
+
+  .message.read {
+    opacity: 0.55;
+    background: transparent;
+  }
+
+  .message.read::before { display: none; }
+
+  .message:hover {
+    border-color: var(--amber);
+    background: var(--bg-elev-2);
+  }
+
+  .message.addressed {
+    opacity: 0.35;
+    cursor: default;
+  }
+
+  .message.addressed:hover { border-color: var(--line-soft); background: var(--bg-elev); }
+
+  .msg-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+
+  .msg-sender {
+    font-size: 13px;
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  .msg-sender .role {
+    color: var(--text-dim);
+    font-weight: 300;
+    margin-left: 6px;
+    font-size: 12px;
+  }
+
+  .msg-time {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--text-mute);
+    letter-spacing: 0.1em;
+  }
+
+  .msg-preview {
+    font-size: 13.5px;
+    color: var(--text-dim);
+    line-height: 1.5;
+  }
+
+  .msg-tag {
+    display: inline-block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    margin-top: 10px;
+    border: 1px solid var(--line);
+    color: var(--text-mute);
+  }
+
+  .msg-tag.urgent { color: var(--ember); border-color: var(--ember); }
+  .msg-tag.client { color: var(--amber); border-color: var(--amber); }
+
+  .message.expanded {
+    background: var(--bg-elev-2);
+    border-color: var(--amber);
+  }
+
+  .msg-body-full {
+    display: none;
+    padding-top: 16px;
+    margin-top: 14px;
+    border-top: 1px solid var(--line);
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  .message.expanded .msg-body-full { display: block; }
+  .message.expanded .msg-preview { display: none; }
+
+  .msg-choices {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .msg-choice {
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--text);
+    padding: 11px 14px;
+    text-align: left;
+    cursor: pointer;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 13px;
+    line-height: 1.4;
+    transition: all 0.25s ease;
+  }
+
+  .msg-choice:hover {
+    border-color: var(--amber);
+    color: var(--amber);
+    padding-left: 18px;
+  }
+
+  .state-panel {
+    padding: 32px 28px;
+    background: var(--bg);
+  }
+
+  .state-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: 20px;
+    margin-bottom: 28px;
+    color: var(--text);
+  }
+
+  .state-section {
+    margin-bottom: 28px;
+  }
+
+  .state-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-mute);
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .state-label .value {
+    color: var(--text-dim);
+    letter-spacing: 0.05em;
+  }
+
+  .meter {
+    height: 3px;
+    background: var(--line-soft);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .meter-fill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1), background 0.5s ease;
+  }
+
+  .meter-fill.good { background: var(--green); }
+  .meter-fill.warn { background: var(--amber); }
+  .meter-fill.bad  { background: var(--red); }
+
+  .state-delta {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--ember);
+    margin-top: 6px;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  .state-delta.show { opacity: 1; }
+
+  .timeline-box {
+    border: 1px solid var(--line);
+    padding: 16px;
+    margin-top: 8px;
+  }
+
+  .timeline-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    margin-bottom: 8px;
+  }
+
+  .timeline-row:last-child { margin-bottom: 0; }
+
+  .timeline-row .k { color: var(--text-mute); font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; }
+  .timeline-row .v { color: var(--text); }
+
+  /* ---------- FREEZE OVERLAY ---------- */
+  .freeze-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(14, 13, 11, 0.88);
+    backdrop-filter: blur(6px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 40px;
+  }
+
+  .freeze-overlay.active {
+    display: flex;
+    animation: fadeIn 1s ease;
+  }
+
+  .freeze-inner {
+    max-width: 680px;
+    width: 100%;
+  }
+
+  .freeze-marker {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    color: var(--amber);
+    text-transform: uppercase;
+    margin-bottom: 32px;
+  }
+
+  .freeze-prompt {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(28px, 3.6vw, 42px);
+    line-height: 1.25;
+    margin-bottom: 48px;
+    color: var(--text);
+  }
+
+  .freeze-prompt em { color: var(--amber); }
+
+  .freeze-choices {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .freeze-choice {
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--text);
+    padding: 18px 24px;
+    text-align: left;
+    cursor: pointer;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.5;
+    transition: all 0.3s ease;
+    font-weight: 300;
+  }
+
+  .freeze-choice:hover {
+    border-color: var(--amber);
+    background: rgba(217, 142, 43, 0.05);
+    padding-left: 32px;
+  }
+
+  .freeze-feedback {
+    display: none;
+    text-align: left;
+    animation: fadeIn 0.6s ease;
+  }
+
+  .freeze-feedback.active { display: block; }
+
+  .freeze-feedback-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    color: var(--amber);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  .freeze-feedback-text {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(22px, 2.6vw, 28px);
+    line-height: 1.4;
+    color: var(--text);
+    margin-bottom: 40px;
+    font-style: italic;
+  }
+
+  /* ---------- SCENE: POST-MORTEM ---------- */
+  #scene-postmortem {
+    padding: 80px 40px;
+  }
+
+  .pm-wrap {
+    max-width: 740px;
+    margin: 0 auto;
+  }
+
+  .pm-marker {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    color: var(--amber);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  .pm-headline {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(32px, 4vw, 48px);
+    line-height: 1.2;
+    margin-bottom: 24px;
+  }
+
+  .pm-headline em { color: var(--amber); }
+
+  .pm-diagnostic {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    padding: 14px 18px;
+    border: 1px solid var(--line);
+    margin-bottom: 40px;
+    background: var(--bg-elev);
+  }
+
+  .pm-diagnostic .diag-label {
+    color: var(--text-mute);
+    margin-right: 10px;
+  }
+
+  .pm-body {
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--text-dim);
+  }
+
+  .pm-body p { margin-bottom: 20px; }
+
+  .pm-body strong { color: var(--text); font-weight: 500; }
+
+  .pm-divider {
+    height: 1px;
+    background: var(--line);
+    margin: 56px 0;
+  }
+
+  .patterns-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: 28px;
+    margin-bottom: 8px;
+  }
+
+  .patterns-sub {
+    color: var(--text-dim);
+    font-size: 14px;
+    margin-bottom: 36px;
+  }
+
+  .pattern-row {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    padding: 20px 0;
+    border-top: 1px solid var(--line-soft);
+    gap: 24px;
+  }
+
+  .pattern-row:last-child { border-bottom: 1px solid var(--line-soft); }
+
+  .pattern-time {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--text-mute);
+    letter-spacing: 0.1em;
+    padding-top: 4px;
+  }
+
+  .pattern-name {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: 20px;
+    color: var(--amber);
+    margin-bottom: 8px;
+  }
+
+  .pattern-desc {
+    font-size: 14px;
+    color: var(--text-dim);
+    line-height: 1.55;
+  }
+
+  .playbook {
+    margin-top: 56px;
+    border: 1px solid var(--line);
+    padding: 32px;
+    background: var(--bg-elev);
+  }
+
+  .playbook-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    color: var(--amber);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+
+  .playbook-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+
+  .playbook-block {
+    margin-bottom: 18px;
+  }
+
+  .playbook-block h4 {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    color: var(--text-mute);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+
+  .playbook-block p {
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  .playbook-block ul {
+    padding-left: 18px;
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.7;
+  }
+
+  .program-hint {
+    margin-top: 72px;
+    padding: 32px 0;
+    border-top: 1px solid var(--line-soft);
+    text-align: center;
+  }
+
+  .program-hint-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    color: var(--text-mute);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .program-hint-text {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: 20px;
+    color: var(--text-dim);
+    line-height: 1.5;
+    max-width: 520px;
+    margin: 0 auto 32px auto;
+  }
+
+  .program-hint-text em { color: var(--amber); font-style: italic; }
+
+  .end-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .cursor {
+    display: inline-block;
+    width: 2px;
+    height: 1em;
+    background: var(--amber);
+    margin-left: 3px;
+    animation: blink 1s step-end infinite;
+    vertical-align: text-bottom;
+  }
+  @keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+  }
+
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--line); }
+  ::-webkit-scrollbar-thumb:hover { background: var(--text-mute); }
+</style>
+</head>
+<body>
+
+<!-- SCENE 0: BRIEFING -->
+<section id="scene-brief" class="scene active">
+  <div class="brief-wrap">
+    <div class="brief-program">
+      <span class="program-mark">◆</span> THE SITUATION ROOM
+    </div>
+    <div class="brief-title serif">Judgment, <em>practiced.</em></div>
+
+    <div class="brief-scenario-label">SITUATION 01</div>
+    <div class="brief-scenario-title serif">The Monday</div>
+
+    <div class="brief-how">
+      <div class="brief-how-label">How this works</div>
+
+      <div class="brief-row">
+        <div class="brief-row-num">01</div>
+        <div class="brief-row-text">
+          You are the Project Manager on a live rollout.
+          <span>Messages will arrive in your inbox. People need things from you. Read, decide, move.</span>
+        </div>
+      </div>
+
+      <div class="brief-row">
+        <div class="brief-row-num">02</div>
+        <div class="brief-row-text">
+          There are no right answers.
+          <span>Every choice has consequences that show up in the project state panel on the right. Watch how they move.</span>
+        </div>
+      </div>
+
+      <div class="brief-row">
+        <div class="brief-row-num">03</div>
+        <div class="brief-row-text">
+          You will be interrupted once.
+          <span>At one point, time stops. You will be asked to step back and name what the situation is actually about.</span>
+        </div>
+      </div>
+
+      <div class="brief-row">
+        <div class="brief-row-num">04</div>
+        <div class="brief-row-text">
+          Your run produces a review and a playbook entry.
+          <span>After about four decisions, the scenario closes and replays your choices as patterns you can carry into real projects.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="brief-note serif">
+      Five to seven minutes. Treat it like a live project. There is no practice mode.
+    </div>
+
+    <button class="cta-button primary" onclick="startSituation()">Begin the situation</button>
+  </div>
+</section>
+
+<!-- SCENE 1: COLD OPEN -->
+<section id="scene-open" class="scene">
+  <div class="cold-open-wrap">
+    <div class="cold-open-marker">SITUATION 01 · LIVE</div>
+    <div class="cold-open-text" id="typewriter"></div>
+    <div class="cold-open-cta" id="open-cta">
+      <button class="cta-button" onclick="enterRoom()">Open inbox</button>
+    </div>
+  </div>
+</section>
+
+<!-- SCENE 2: SITUATION ROOM -->
+<section id="scene-room" class="scene">
+  <div class="room-header">
+    <div class="room-project">
+      <div class="project-name">KESTREL FINANCIAL · <strong>PLATFORM ROLLOUT</strong></div>
+    </div>
+    <div class="room-clock">
+      <div class="clock-dot"></div>
+      <div class="clock-display">
+        <span class="week-label" id="clock-week">WEEK 6</span>
+        <span id="clock-time">MON 08:47</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="room-grid">
+    <div class="feed">
+      <div class="feed-header">
+        <div class="feed-title">Inbox</div>
+        <div class="feed-count" id="feed-count">0 UNREAD</div>
+      </div>
+      <div id="messages"></div>
+    </div>
+
+    <aside class="state-panel">
+      <div class="state-title">Project state</div>
+
+      <div class="state-section">
+        <div class="state-label">
+          <span>Timeline buffer</span>
+          <span class="value" id="val-timeline">+3 DAYS</span>
+        </div>
+        <div class="meter"><div class="meter-fill good" id="meter-timeline" style="width: 62%"></div></div>
+        <div class="state-delta" id="delta-timeline"></div>
+      </div>
+
+      <div class="state-section">
+        <div class="state-label">
+          <span>Build quality</span>
+          <span class="value" id="val-quality">STABLE</span>
+        </div>
+        <div class="meter"><div class="meter-fill good" id="meter-quality" style="width: 78%"></div></div>
+        <div class="state-delta" id="delta-quality"></div>
+      </div>
+
+      <div class="state-section">
+        <div class="state-label">
+          <span>Team confidence</span>
+          <span class="value" id="val-team">HIGH</span>
+        </div>
+        <div class="meter"><div class="meter-fill good" id="meter-team" style="width: 74%"></div></div>
+        <div class="state-delta" id="delta-team"></div>
+      </div>
+
+      <div class="state-section">
+        <div class="state-label">
+          <span>Client sentiment</span>
+          <span class="value" id="val-client">POSITIVE</span>
+        </div>
+        <div class="meter"><div class="meter-fill good" id="meter-client" style="width: 70%"></div></div>
+        <div class="state-delta" id="delta-client"></div>
+      </div>
+
+      <div class="state-section">
+        <div class="state-label"><span>Upcoming</span></div>
+        <div class="timeline-box">
+          <div class="timeline-row"><span class="k">10:00</span><span class="v">Client status call</span></div>
+          <div class="timeline-row"><span class="k">EOD</span><span class="v">Revised timeline to Ana</span></div>
+          <div class="timeline-row"><span class="k">FRI</span><span class="v">Sprint demo, Kestrel</span></div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<!-- FREEZE OVERLAY -->
+<div class="freeze-overlay" id="freeze">
+  <div class="freeze-inner">
+    <div id="freeze-stage-1">
+      <div class="freeze-marker">TIME STOPPED</div>
+      <div class="freeze-prompt serif">Before you respond, <em>what is this situation actually about?</em></div>
+      <div class="freeze-choices">
+        <button class="freeze-choice" onclick="pickFrame('timeline')">A tight timeline that needs protection.</button>
+        <button class="freeze-choice" onclick="pickFrame('quality')">A quality problem that has not surfaced yet.</button>
+        <button class="freeze-choice" onclick="pickFrame('client')">A client relationship that needs managing.</button>
+        <button class="freeze-choice" onclick="pickFrame('tradeoffs')">A set of hidden trade-offs no one has made explicit.</button>
+      </div>
+    </div>
+    <div id="freeze-stage-2" class="freeze-feedback">
+      <div class="freeze-feedback-label">YOUR FRAME</div>
+      <div class="freeze-feedback-text" id="freeze-feedback-text"></div>
+      <button class="cta-button primary" onclick="closeFreeze()">Continue</button>
+    </div>
+  </div>
+</div>
+
+<!-- SCENE 3: POST-MORTEM -->
+<section id="scene-postmortem" class="scene">
+  <div class="pm-wrap">
+    <div class="pm-marker">WEEK 12 · PROJECT REVIEW</div>
+    <div class="pm-headline serif" id="pm-headline"></div>
+    <div class="pm-diagnostic" id="pm-diagnostic"></div>
+    <div class="pm-body" id="pm-body"></div>
+
+    <div class="pm-divider"></div>
+
+    <div class="patterns-title serif">What you did, named.</div>
+    <div class="patterns-sub">Patterns experienced PMs learn to spot in themselves. The labels are sticky on purpose. Next time you feel one forming, you will notice.</div>
+    <div id="pattern-list"></div>
+
+    <div class="playbook" id="playbook-stub"></div>
+
+    <div class="program-hint">
+      <div class="program-hint-label">END OF SITUATION 01</div>
+      <div class="program-hint-text serif">
+        This was the first of <em>nine</em> situations. Each one closes a different pattern. For now, try this one again and see how it plays differently.
+      </div>
+      <div class="end-actions">
+        <button class="cta-button primary" onclick="restart()">Run it again</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+/* ============================================================
+   DATA
+   ============================================================ */
+
+const openingLines = [
+  "Monday, 8:47 AM.",
+  "Week 6 of 16. Kestrel Financial platform rollout.",
+  "You have a client call at 10:00.",
+  "<span class='amber-accent'>Your inbox has things in it.</span>"
+];
+
+const messages = [
+  {
+    id: 'kamil',
+    sender: 'Kamil Nowak',
+    role: 'Backend Lead · Warsaw',
+    time: 'SUN 22:14',
+    preview: "Heads up on Aditi. Running a bit behind on the policy module.",
+    tag: null,
+    body: "Morning. Heads up, Aditi is out sick till Thursday, possibly Friday. It has hit us on the policy module, we are running about a week behind on that one piece. Rest of the backlog is fine. Will update the status doc today. Let me know if you want to talk through options.",
+    choices: [
+      { label: "'Thanks for flagging. Let us talk at 11, post-client call.'", effect: { team: +2, timeline: 0, note: "Reply sent. Kamil will wait until 11.", pattern: ['defer_decide', '08:49'] } },
+      { label: "'Can we recover the week? What would it take?'", effect: { team: +3, timeline: +1, note: "Kamil will come back with options by 10.", pattern: ['ask_cost', '08:49'] } },
+      { label: "Skip for now. Come back later.", effect: { team: -2, timeline: -1, note: "Message left unopened. Kamil does not know where you stand.", pattern: ['quiet_signal', '08:49'] } }
+    ]
+  },
+  {
+    id: 'riya',
+    sender: 'Riya Chandran',
+    role: 'Frontend Lead · Bangalore',
+    time: 'MON 07:12',
+    preview: "Blocked on policy module endpoints. Need a call on assumptions vs. pause.",
+    tag: 'urgent',
+    body: "Hi, we are blocked on the policy module endpoints. We have been stubbing but the data shape keeps shifting. Team wants to keep moving with assumptions so we do not lose the week. Or we pause this stream and pick it up when backend lands. Your call. Either way is fine, but we need to know.",
+    choices: [
+      { label: "'Keep moving with assumptions. We will reconcile later.'", effect: { timeline: +1, quality: -12, team: -1, note: "Team proceeds. Assumptions go into the build.", pattern: ['patch_forward', '08:52'] } },
+      { label: "'Pause frontend on this stream. Redirect to the checkout flow.'", effect: { timeline: -2, quality: +4, team: +2, note: "Team pivots. The policy work sits until backend lands.", pattern: ['protect_quality', '08:52'] } },
+      { label: "'Give me an hour. I need to check with Kamil first.'", effect: { timeline: -1, team: +1, note: "Decision held. You now have three open threads instead of two.", pattern: ['coordinate_first', '08:52'] } }
+    ]
+  },
+  {
+    id: 'david',
+    sender: 'David Chen',
+    role: 'Client VP · Kestrel',
+    time: 'MON 08:02',
+    preview: "Quick ask for today's call. Small feature. Saved quotes. 2 or 3 screens.",
+    tag: 'client',
+    body: "Quick ask for this morning's call. Leadership wants to add a 'saved quotes' feature before go-live. Small thing. Two or three screens. Users can save a quote and come back to it. Can we slot it in without moving the date? Thanks.",
+    choices: [
+      { label: "'Yes, we can slot it in. Let us discuss at 10.'", effect: { client: +6, timeline: -12, quality: -4, note: "Commitment given. David confirms for the call.", pattern: ['automatic_yes', '08:55'] } },
+      { label: "'Happy to look at it once you send the requirements.'", effect: { client: +2, timeline: +2, note: "David will send the spec. Commitment deferred.", pattern: ['size_before_sign', '08:55'] } },
+      { label: "'Want to talk through what would need to shift to absorb it?'", effect: { client: -3, timeline: +5, quality: +2, note: "David pauses. The conversation moves from ask to trade-off.", pattern: ['name_tradeoff', '08:55'] } }
+    ]
+  },
+  {
+    id: 'priya',
+    sender: 'Priya Sharma',
+    role: 'QA Lead · Manila',
+    time: 'MON 08:21',
+    preview: "FYI, frontend has been patching to master for three days. Just want you aware.",
+    tag: null,
+    body: "FYI, I have been seeing the frontend team commit patches directly to master for three days. Not flagging alarm, just want you aware. They are moving fast and some of the coverage is slipping. I can tighten the review gate if you want, but it will slow them down. Your call.",
+    choices: [
+      { label: "'Tighten the gate. Let us slow down.'", effect: { quality: +10, timeline: -4, note: "Gate tightened. Frontend velocity drops.", pattern: ['tighten_gate', '08:58'] } },
+      { label: "'Keep going for now. Let us reassess Friday.'", effect: { quality: -8, timeline: +2, note: "Patching continues. Friday is five days away.", pattern: ['deferred_quality', '08:58'] } },
+      { label: "Read but do not reply yet.", effect: { quality: -4, team: -2, note: "Priya sees the message opened. No response.", pattern: ['silent_permission', '08:58'] } }
+    ]
+  }
+];
+
+const patternDefs = {
+  defer_decide:          { name: "The polite defer", desc: "You acknowledged without deciding. Useful in small doses, corrosive at scale." },
+  ask_cost:              { name: "The cost-check", desc: "You asked what recovery would take instead of assuming the team would absorb it." },
+  quiet_signal:          { name: "The quiet signal, missed", desc: "The message with no urgency tag is often the one that matters most." },
+  patch_forward:         { name: "Patch forward", desc: "Keep velocity, reconcile later. Works until the rework bill arrives, which is always." },
+  protect_quality:       { name: "Protect the foundation", desc: "Slower today, cleaner tomorrow. Experienced PMs pay this cost willingly." },
+  coordinate_first:      { name: "Coordinate first, decide second", desc: "Gathering context before committing. Careful it does not become a way to avoid the call." },
+  automatic_yes:         { name: "The automatic yes", desc: "Client-first reflex. The most expensive word in project management is 'sure.'" },
+  size_before_sign:      { name: "Size before sign", desc: "You did not refuse. You made the cost visible before the commitment." },
+  name_tradeoff:         { name: "Name the trade-off", desc: "The uncomfortable conversation now is the one you will not have to have at week 14." },
+  tighten_gate:          { name: "The deliberate slow-down", desc: "You chose a harder short-term conversation over an easier long-term collapse." },
+  deferred_quality:      { name: "Quality on credit", desc: "Every shortcut is a loan against the end of the project. Interest is steep." },
+  silent_permission:     { name: "Silence as permission", desc: "When a quiet signal gets no response, the team reads approval." },
+  received_loud_and_clear: { name: "Received and absorbed", desc: "You took the task on. Ana wanted a thinking partner, not a courier." },
+  upstream_honesty:      { name: "Upstream honesty", desc: "You used the reporting moment as a strategic one. This is how trust gets built upward." },
+  upward_punt:           { name: "The upward punt", desc: "When in doubt, escalate. It trains your manager to make calls you should be making." }
+};
+
+const frameFeedback = {
+  timeline: "Timeline is the symptom. The decisions moving it are what you have not named yet.",
+  quality: "Quality is one dimension. It is usually what breaks when the other three are not resolved.",
+  client: "Reading this as a client problem narrows your options to communication. The harder moves sit outside that frame.",
+  tradeoffs: "You saw the whole field. Everything this morning is a trade-off no one has named out loud."
+};
+
+const playbookContent = {
+  automatic_yes: {
+    title: "When a client asks for a 'small' addition",
+    signal: "The word 'small' in a scope conversation is almost never a size estimate. It is a social lubricant.",
+    ask: ["What existing work does this touch?", "What does this change about the critical path?", "What would have to give to absorb it cleanly?"],
+    line: "Saying 'let me size it properly and come back in an hour' is not saying no. It is the only way to give a real yes.",
+    tell: "Watch for the words 'small,' 'quick,' or 'just' describing a request. Those are pattern tells."
+  },
+  patch_forward: {
+    title: "When velocity conflicts with foundation",
+    signal: "If the team is committing patches to avoid a conversation, the conversation was the real work.",
+    ask: ["What are we building on that is not solid?", "What does the rework cost if we reconcile later?", "Who owns the call to pause vs. keep moving?"],
+    line: "Velocity that comes from unpaid quality debt is not velocity. It is a scheduled renegotiation.",
+    tell: "Watch for assumptions going into the build in place of confirmed specs. That is the shape of it forming."
+  },
+  quiet_signal: {
+    title: "When QA flags softly",
+    signal: "The 'FYI, not flagging alarm' message is the most mis-calibrated message in our inbox. People with concerns understate them. The real alarm is in the understatement.",
+    ask: ["Why did they send this at all if it was not a concern?", "What would make them upgrade the signal?", "What does silence from me teach them next time?"],
+    line: "If you want QA to escalate earlier, respond when they escalate quietly.",
+    tell: "Watch for softener phrases: 'just wanted you aware,' 'not flagging alarm,' 'probably nothing.' Those mean something."
+  },
+  name_tradeoff: {
+    title: "When you need to push back on a client",
+    signal: "The most professional thing you can do with an unreasonable ask is make its cost visible.",
+    ask: ["What exactly am I trading if I say yes?", "Can I name this in numbers, not emotions?", "What options does the client have if they know the real cost?"],
+    line: "Clients rarely renew the PMs who always said yes. They renew the PMs whose 'yes' meant something.",
+    tell: "Watch for the urge to resolve a client's discomfort quickly. That urge is usually the moment to slow down."
+  },
+  upward_punt: {
+    title: "When you want to escalate instead of decide",
+    signal: "Escalation is a tool, not a reflex. When it becomes a reflex, your manager starts running your project.",
+    ask: ["What call am I actually asking them to make?", "Do I have a recommendation, or just a problem?", "What would I do if they were not available?"],
+    line: "Escalate with a plan, not with a question.",
+    tell: "Watch for escalations that present only the problem. If your first instinct is 'I need to flag this up,' pause and draft the recommendation first."
+  },
+  silent_permission: {
+    title: "When a team reads your silence",
+    signal: "In distributed teams, no response is a response. If Manila raised quality and heard nothing for a day, the team learned that quality flags do not matter here.",
+    ask: ["What am I teaching the team by not responding?", "What cost am I deferring by not addressing this?", "Is this quieter than it should be?"],
+    line: "Answering quiet signals loudly is how you train the team to send them at all.",
+    tell: "Watch for messages you have read but not replied to for more than a day. Silence is teaching the team what matters."
+  }
+};
+
+patternDefs.right_reframe   = { name: "The whole-field frame", desc: "You named what the situation actually was, a set of unpriced trade-offs. Everything downstream reads better from here." };
+patternDefs.partial_reframe = { name: "Half the field", desc: "You saw a real dimension, but missed the connective tissue. Something was still hiding." };
+patternDefs.narrow_frame    = { name: "The single-axis frame", desc: "You picked one pressure and ran at it. The other dimensions kept moving underneath." };
+
+/* ============================================================
+   STATE
+   ============================================================ */
+
+let state = {
+  timeline: 62,
+  quality: 78,
+  team: 74,
+  client: 70,
+  openedMessages: new Set(),
+  addressedMessages: new Set(),
+  patterns: [],
+  frame: null,
+  frozen: false,
+  scenarioStart: null
+};
+
+/* ============================================================
+   SCENE TRANSITIONS
+   ============================================================ */
+
+function startSituation() {
+  const brief = document.getElementById('scene-brief');
+  const open = document.getElementById('scene-open');
+  brief.classList.remove('active');
+  brief.style.display = 'none';
+  open.classList.add('active');
+  open.style.display = 'flex';
+  typewriter();
+}
+
+function enterRoom() {
+  const open = document.getElementById('scene-open');
+  const room = document.getElementById('scene-room');
+  open.classList.remove('active');
+  open.style.display = 'none';
+  room.classList.add('active');
+  room.style.display = 'block';
+  startRoom();
+}
+
+function startRoom() {
+  state.scenarioStart = Date.now();
+  runClock();
+  scheduleMessages();
+}
+
+/* ============================================================
+   TYPEWRITER
+   ============================================================ */
+
+function typewriter() {
+  const container = document.getElementById('typewriter');
+  container.innerHTML = '';
+  const cta = document.getElementById('open-cta');
+  cta.style.opacity = 0;
+  cta.style.animation = '';
+  let lineIdx = 0;
+
+  function nextLine() {
+    if (lineIdx >= openingLines.length) {
+      cta.style.animation = 'fadeUp 0.8s ease forwards';
+      return;
+    }
+    const lineEl = document.createElement('span');
+    lineEl.className = 'line';
+    container.appendChild(lineEl);
+
+    const full = openingLines[lineIdx];
+    let i = 0;
+    lineEl.style.opacity = 1;
+
+    const isHtml = full.includes('<');
+    if (isHtml) {
+      lineEl.innerHTML = full;
+      setTimeout(() => {
+        lineIdx++;
+        setTimeout(nextLine, 400);
+      }, 600);
+      return;
+    }
+
+    const cursor = document.createElement('span');
+    cursor.className = 'cursor';
+    lineEl.appendChild(cursor);
+
+    const iv = setInterval(() => {
+      if (i < full.length) {
+        cursor.insertAdjacentText('beforebegin', full[i]);
+        i++;
+      } else {
+        clearInterval(iv);
+        cursor.remove();
+        lineIdx++;
+        setTimeout(nextLine, 550);
+      }
+    }, 32);
+  }
+
+  nextLine();
+}
+
+/* ============================================================
+   CLOCK
+   ============================================================ */
+
+function runClock() {
+  const startMinutes = 8 * 60 + 47;
+  const startTs = Date.now();
+
+  setInterval(() => {
+    const elapsedSec = (Date.now() - startTs) / 1000;
+    const projMinutes = startMinutes + Math.floor(elapsedSec * 5);
+    const h = Math.floor(projMinutes / 60) % 24;
+    const m = projMinutes % 60;
+    document.getElementById('clock-time').textContent = `MON ${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
+  }, 1000);
+}
+
+/* ============================================================
+   MESSAGE FEED
+   ============================================================ */
+
+function scheduleMessages() {
+  setTimeout(() => dropMessage(0), 1500);
+  setTimeout(() => dropMessage(1), 9000);
+  setTimeout(() => dropMessage(2), 18000);
+  setTimeout(() => dropMessage(3), 28000);
+  setTimeout(checkFreezeTrigger, 42000);
+}
+
+function dropMessage(idx) {
+  const msg = messages[idx];
+  if (!msg) return;
+
+  const container = document.getElementById('messages');
+  const el = document.createElement('div');
+  el.className = 'message unread';
+  el.id = 'msg-' + msg.id;
+  el.innerHTML = `
+    <div class="msg-head">
+      <div class="msg-sender">${msg.sender}<span class="role"> · ${msg.role}</span></div>
+      <div class="msg-time">${msg.time}</div>
+    </div>
+    <div class="msg-preview">${msg.preview}</div>
+    <div class="msg-body-full">
+      ${msg.body}
+      <div class="msg-choices">
+        ${msg.choices.map((c, i) => `<button class="msg-choice" onclick="pickChoice('${msg.id}', ${i})">${c.label}</button>`).join('')}
+      </div>
+    </div>
+    ${msg.tag ? `<div class="msg-tag ${msg.tag}">${msg.tag === 'urgent' ? 'URGENT' : 'CLIENT'}</div>` : ''}
+  `;
+  el.onclick = (e) => {
+    if (e.target.classList.contains('msg-choice')) return;
+    toggleMessage(msg.id);
+  };
+  container.appendChild(el);
+  updateFeedCount();
+}
+
+function toggleMessage(id) {
+  const el = document.getElementById('msg-' + id);
+  if (!el || el.classList.contains('addressed')) return;
+  el.classList.toggle('expanded');
+  if (el.classList.contains('unread')) {
+    el.classList.remove('unread');
+    el.classList.add('read');
+    state.openedMessages.add(id);
+  }
+  updateFeedCount();
+}
+
+function updateFeedCount() {
+  const unread = document.querySelectorAll('.message.unread').length;
+  document.getElementById('feed-count').textContent = `${unread} UNREAD`;
+}
+
+/* ============================================================
+   CHOICE HANDLING
+   ============================================================ */
+
+function pickChoice(msgId, choiceIdx) {
+  event.stopPropagation();
+  const msg = messages.find(m => m.id === msgId);
+  const choice = msg.choices[choiceIdx];
+  const el = document.getElementById('msg-' + msgId);
+
+  applyEffects(choice.effect);
+  if (choice.effect.pattern) {
+    state.patterns.push({
+      key: choice.effect.pattern[0],
+      time: choice.effect.pattern[1],
+      senderContext: msg.sender
+    });
+  }
+
+  el.classList.add('addressed');
+  el.classList.remove('expanded');
+  el.innerHTML = `
+    <div class="msg-head">
+      <div class="msg-sender">${msg.sender}<span class="role"> · ${msg.role}</span></div>
+      <div class="msg-time">${msg.time}</div>
+    </div>
+    <div class="msg-preview" style="color: var(--text-mute); font-style: italic;">✓ ${choice.effect.note}</div>
+  `;
+
+  state.addressedMessages.add(msgId);
+  updateFeedCount();
+
+  if (state.addressedMessages.size === 3 && !state.frozen) {
+    setTimeout(triggerFreeze, 1200);
+  }
+  if (state.addressedMessages.size >= 4 && state.frame) {
+    setTimeout(endScenario, 1500);
+  }
+}
+
+function applyEffects(effect) {
+  const keys = ['timeline', 'quality', 'team', 'client'];
+  keys.forEach(k => {
+    if (effect[k] !== undefined) {
+      state[k] = Math.max(5, Math.min(100, state[k] + effect[k]));
+      updateMeter(k);
+      flashDelta(k, effect[k]);
+    }
+  });
+}
+
+function updateMeter(key) {
+  const v = state[key];
+  const meter = document.getElementById('meter-' + key);
+  const val = document.getElementById('val-' + key);
+  meter.style.width = v + '%';
+
+  const cls = v >= 60 ? 'good' : v >= 35 ? 'warn' : 'bad';
+  meter.className = 'meter-fill ' + cls;
+
+  const labels = {
+    timeline: v >= 70 ? '+3 DAYS' : v >= 45 ? '0 DAYS' : v >= 25 ? '-4 DAYS' : '-9 DAYS',
+    quality:  v >= 70 ? 'STABLE' : v >= 45 ? 'WATCHING' : v >= 25 ? 'ERODING' : 'AT RISK',
+    team:     v >= 70 ? 'HIGH'    : v >= 45 ? 'STEADY'   : v >= 25 ? 'STRAINED' : 'LOW',
+    client:   v >= 70 ? 'POSITIVE': v >= 45 ? 'NEUTRAL'  : v >= 25 ? 'UNEASY'   : 'FRAYED'
+  };
+  val.textContent = labels[key];
+}
+
+function flashDelta(key, delta) {
+  if (delta === 0) return;
+  const el = document.getElementById('delta-' + key);
+  el.textContent = (delta > 0 ? '+' : '') + delta;
+  el.style.color = delta > 0 ? 'var(--green)' : 'var(--ember)';
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2500);
+}
+
+/* ============================================================
+   FREEZE
+   ============================================================ */
+
+function checkFreezeTrigger() {
+  if (!state.frame && state.addressedMessages.size < 3) {
+    triggerFreeze();
+  }
+}
+
+function triggerFreeze() {
+  if (state.frozen) return;
+  state.frozen = true;
+  document.getElementById('freeze-stage-1').style.display = 'block';
+  document.getElementById('freeze-stage-2').classList.remove('active');
+  document.getElementById('freeze').classList.add('active');
+}
+
+function pickFrame(key) {
+  state.frame = key;
+  if (key === 'tradeoffs') {
+    state.patterns.push({ key: 'right_reframe', time: '09:14', senderContext: 'You' });
+  } else if (key === 'quality') {
+    state.patterns.push({ key: 'partial_reframe', time: '09:14', senderContext: 'You' });
+  } else {
+    state.patterns.push({ key: 'narrow_frame', time: '09:14', senderContext: 'You' });
+  }
+
+  document.getElementById('freeze-stage-1').style.display = 'none';
+  document.getElementById('freeze-feedback-text').textContent = frameFeedback[key];
+  document.getElementById('freeze-stage-2').classList.add('active');
+}
+
+function closeFreeze() {
+  document.getElementById('freeze').classList.remove('active');
+  if (state.addressedMessages.size >= 3) {
+    setTimeout(endScenario, 800);
+  }
+}
+
+/* ============================================================
+   POST-MORTEM
+   ============================================================ */
+
+function endScenario() {
+  const room = document.getElementById('scene-room');
+  const pm = document.getElementById('scene-postmortem');
+  room.classList.remove('active');
+  room.style.display = 'none';
+  pm.classList.add('active');
+  pm.style.display = 'block';
+  window.scrollTo(0, 0);
+  renderPostMortem();
+}
+
+function getDiagnostic() {
+  const { timeline, quality, team, client } = state;
+  function read(v, high, low) { return v >= 65 ? high : v >= 40 ? 'steady with' : low; }
+
+  const parts = [
+    read(timeline, 'protected timeline', 'strained timeline'),
+    read(quality, 'protected quality', 'strained quality'),
+    read(team, 'steady team', 'strained team'),
+    read(client, 'steady client', 'strained client')
+  ];
+  return parts.join(' · ');
+}
+
+function renderPostMortem() {
+  const { timeline, quality, team, client } = state;
+  const avg = (timeline + quality + team + client) / 4;
+
+  let headline, body;
+
+  if (avg >= 65) {
+    headline = `Kestrel went live on week 16. <em>Clean landing, considering.</em>`;
+    body = `
+      <p>The project landed within a week of the original date. Quality held. The client's follow-on RFP included a note mentioning <strong>the transparency of the mid-project communication</strong>.</p>
+      <p>The easy read is that the PM did everything right. The accurate read is that they made hard calls early. Pushing back on scope when the project could not absorb it. Protecting quality when velocity was easier. Using the reporting ask as a strategic conversation, not a courier job.</p>
+      <p>None of it was written in a status report. It happened in four small moments on a Monday morning.</p>
+    `;
+  } else if (avg >= 45) {
+    headline = `Kestrel shipped. <em>Week 18. A bit bruised.</em>`;
+    body = `
+      <p>Final delivery landed two weeks late. Quality issues surfaced in UAT and required a remediation sprint. Client sentiment softened but did not break. They renewed, with more caution than before.</p>
+      <p>Looking at the Monday of week 6, a pattern emerges. A delayed dependency was not addressed head-on. A scope ask got absorbed without a full cost conversation. A quality signal from QA was acknowledged but not acted on. None catastrophic in isolation. Compounded over six weeks, they added up.</p>
+      <p><strong>The decisions were not wrong. They were small, and they were not made explicit.</strong> That is how drift usually looks in the replay.</p>
+    `;
+  } else {
+    headline = `Kestrel landed at week 19, scope reduced. <em>Client did not renew.</em>`;
+    body = `
+      <p>Late, descoped, bruised. Final phase was a stabilisation push with heavy rework. The client's exit feedback was blunt. They felt they were not told the truth about where the project was, and they found out too late to help.</p>
+      <p>Rewinding to the Monday of week 6, the signals were all there. Backend delay. Quality erosion. Scope being absorbed silently. Each message on its own had a reasonable response. Together, they formed a pattern.</p>
+      <p>Nothing you did was unreasonable. Unreasonable is rarely how projects fail.</p>
+    `;
+  }
+
+  document.getElementById('pm-headline').innerHTML = headline;
+  document.getElementById('pm-diagnostic').innerHTML = `<span class="diag-label">YOUR RUN</span> ${getDiagnostic()}`;
+  document.getElementById('pm-body').innerHTML = body;
+
+  const list = document.getElementById('pattern-list');
+  list.innerHTML = state.patterns.map(p => {
+    const def = patternDefs[p.key];
+    if (!def) return '';
+    return `
+      <div class="pattern-row">
+        <div class="pattern-time">${p.time}</div>
+        <div>
+          <div class="pattern-name">${def.name}</div>
+          <div class="pattern-desc">${def.desc}</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  const featuredPattern = state.patterns.find(p => ['automatic_yes', 'patch_forward', 'quiet_signal', 'name_tradeoff', 'upward_punt', 'silent_permission'].includes(p.key)) || state.patterns[0];
+  renderPlaybook(featuredPattern);
+}
+
+function renderPlaybook(pattern) {
+  const key = pattern && playbookContent[pattern.key] ? pattern.key : 'automatic_yes';
+  const p = playbookContent[key];
+
+  document.getElementById('playbook-stub').innerHTML = `
+    <div class="playbook-label">PLAYBOOK ENTRY · DERIVED FROM YOUR RUN</div>
+    <div class="playbook-title serif">${p.title}</div>
+    <div class="playbook-block">
+      <h4>Signal</h4>
+      <p>${p.signal}</p>
+    </div>
+    <div class="playbook-block">
+      <h4>Ask yourself</h4>
+      <ul>${p.ask.map(a => `<li>${a}</li>`).join('')}</ul>
+    </div>
+    <div class="playbook-block">
+      <h4>When you see it again</h4>
+      <p>${p.tell}</p>
+    </div>
+    <div class="playbook-block">
+      <h4>One line to remember</h4>
+      <p style="font-family: 'Instrument Serif', serif; font-style: italic; font-size: 17px; color: var(--amber);">"${p.line}"</p>
+    </div>
+  `;
+}
+
+function restart() {
+  state = {
+    timeline: 62, quality: 78, team: 74, client: 70,
+    openedMessages: new Set(), addressedMessages: new Set(),
+    patterns: [], frame: null, frozen: false, scenarioStart: null
+  };
+  document.getElementById('messages').innerHTML = '';
+  ['timeline','quality','team','client'].forEach(updateMeter);
+  updateFeedCount();
+  document.getElementById('scene-postmortem').classList.remove('active');
+  document.getElementById('scene-postmortem').style.display = 'none';
+  document.getElementById('scene-brief').classList.add('active');
+  document.getElementById('scene-brief').style.display = 'flex';
+  window.scrollTo(0, 0);
+}
+</script>
+
+</body>
+</html>
